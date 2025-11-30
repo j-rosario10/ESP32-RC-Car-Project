@@ -30,6 +30,12 @@ const char MAIN_PAGE[] = R"EOF(
       background-size: cover;
       filter: brightness(0.6);
       z-index: 0;
+      transition: 0.2s ease-out;
+    }
+
+    /* Drift visual tint */
+    body.drift-on .video-bg {
+      filter: brightness(0.7) hue-rotate(-20deg) saturate(1.2);
     }
 
     /* HUD overlay */
@@ -56,13 +62,16 @@ const char MAIN_PAGE[] = R"EOF(
       padding: 8px 14px;
       border-radius: 999px;
       background: rgba(0, 0, 0, 0.6);
-      border: 2px solid #888;
+      border: 1px solid rgba(150, 150, 150, 0.7);
       font-size: 12px;
       letter-spacing: 1px;
       text-transform: uppercase;
       cursor: pointer;
       box-shadow: 0 0 0 rgba(0,0,0,0);
       transition: 0.12s ease-out;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }
 
     .mode-toggle span.label {
@@ -71,35 +80,43 @@ const char MAIN_PAGE[] = R"EOF(
 
     .mode-toggle span.state {
       font-weight: bold;
-      margin-left: 4px;
+      margin-left: 2px;
       color: #f44;
     }
 
     .mode-toggle.active {
       border-color: #0ff;
-      box-shadow: 0 0 16px rgba(0,255,255,0.8);
-      background: radial-gradient(circle at top left, #066, #000);
+      box-shadow: 0 0 16px rgba(0,255,255,0.6);
+      background: radial-gradient(circle at top left, rgba(0,120,120,0.9), rgba(0,0,0,0.85));
     }
 
     .mode-toggle.active span.state {
       color: #0ff;
     }
 
+    /* Center speed / gear cluster */
     .speed-wrap {
       pointer-events: auto;
       margin: 0 auto;
-      padding: 8px 16px 10px 16px;
-      background: rgba(0, 0, 0, 0.6);
-      border: 2px solid #0f0;
-      border-radius: 12px;
-      min-width: 220px;
+      padding: 10px 18px 12px 18px;
+      background: radial-gradient(circle at top, rgba(0,255,128,0.12), rgba(0,0,0,0.9));
+      border-radius: 18px;
+      min-width: 260px;
       text-align: center;
+      box-shadow: 0 0 18px rgba(0, 255, 128, 0.25);
+      border: 1px solid rgba(0,255,128,0.6);
+      backdrop-filter: blur(4px);
+    }
+
+    body.drift-on .speed-wrap {
+      border-color: #0ff;
+      box-shadow: 0 0 22px rgba(0,255,255,0.35);
     }
 
     .speed-display {
-      font-size: 20px;
-      letter-spacing: 2px;
-      margin-bottom: 6px;
+      font-size: 22px;
+      letter-spacing: 3px;
+      margin-bottom: 4px;
     }
 
     .gear-display {
@@ -108,7 +125,8 @@ const char MAIN_PAGE[] = R"EOF(
       margin-bottom: 6px;
     }
 
-    .speed-slider input[type=range] {
+    .speed-slider input[type=range],
+    #speedSlider {
       width: 100%;
     }
 
@@ -127,34 +145,41 @@ const char MAIN_PAGE[] = R"EOF(
       transition: width 0.08s linear;
     }
 
+    body.drift-on .rpm-fill {
+      background: linear-gradient(90deg, #0ff, #ff0, #f0f);
+    }
+
     .status-panel {
       pointer-events: auto;
       padding: 10px 16px;
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 10px;
+      background: radial-gradient(circle at top right, rgba(0,255,255,0.12), rgba(0,0,0,0.9));
+      border-radius: 14px;
       min-width: 220px;
       max-width: 280px;
       font-size: 12px;
       text-align: left;
+      border: 1px solid rgba(0,255,255,0.5);
+      box-shadow: 0 0 14px rgba(0,255,255,0.18);
     }
 
     .status-title {
-      color: #0f0;
-      font-weight: bold;
-      margin-bottom: 4px;
+      color: #0ff;
+      font-weight: 600;
+      margin-bottom: 6px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       font-size: 11px;
     }
 
     .status-line {
       margin: 2px 0;
+      opacity: 0.9;
     }
 
     .hud-bottom {
       display: flex;
       justify-content: space-between;
-      padding: 18px 24px;
+      padding: 14px 24px 18px 24px;
       align-items: flex-end;
     }
 
@@ -165,11 +190,19 @@ const char MAIN_PAGE[] = R"EOF(
       align-items: center;
     }
 
+    .control-label {
+      font-size: 11px;
+      margin-top: 4px;
+      color: #aaa;
+      text-align: center;
+    }
+
+    /* Steering buttons */
     .steer-btn {
       width: 64px;
       height: 64px;
       border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.4);
+      border: 2px solid rgba(255,255,255,0.35);
       background: rgba(0,0,0,0.7);
       display: flex;
       align-items: center;
@@ -178,6 +211,11 @@ const char MAIN_PAGE[] = R"EOF(
       color: #eee;
       cursor: pointer;
       transition: 0.1s;
+      box-shadow: 0 0 0 rgba(0,0,0,0);
+    }
+
+    .steer-btn:hover {
+      filter: brightness(1.15);
     }
 
     .steer-btn.active {
@@ -187,6 +225,7 @@ const char MAIN_PAGE[] = R"EOF(
       box-shadow: 0 0 15px rgba(0,255,0,0.8);
     }
 
+    /* Pedals */
     .pedal {
       width: 90px;
       height: 140px;
@@ -204,6 +243,7 @@ const char MAIN_PAGE[] = R"EOF(
       position: relative;
       text-shadow: 0 0 4px rgba(0,0,0,0.8);
       box-shadow: 0 6px 12px rgba(0,0,0,0.6);
+      transform: perspective(400px) rotateX(12deg);
     }
 
     .pedal::before {
@@ -212,30 +252,34 @@ const char MAIN_PAGE[] = R"EOF(
       inset: 10px 16px;
       background: repeating-linear-gradient(
         to bottom,
-        rgba(0,0,0,0.8) 0,
-        rgba(0,0,0,0.8) 4px,
-        rgba(80,80,80,0.8) 4px,
-        rgba(80,80,80,0.8) 8px
+        rgba(0,0,0,0.85) 0,
+        rgba(0,0,0,0.85) 4px,
+        rgba(80,80,80,0.85) 4px,
+        rgba(80,80,80,0.85) 8px
       );
       border-radius: 8px;
       opacity: 0.6;
     }
 
+    .pedal:hover {
+      filter: brightness(1.15);
+    }
+
     .pedal.active {
-      transform: translateY(-4px);
+      transform: perspective(400px) rotateX(4deg) translateY(-2px);
       border-color: #0f0;
       color: #0f0;
       box-shadow: 0 10px 20px rgba(0,255,0,0.7);
     }
 
-    .gas { background: linear-gradient(145deg, #666, #272727); border-color: #8f8; }
-    .brake { background: linear-gradient(145deg, #703131, #2b0505); border-color: #f88; }
+    .gas {
+      background: linear-gradient(145deg, #666, #272727);
+      border-color: #8f8;
+    }
 
-    .control-label {
-      font-size: 11px;
-      margin-top: 4px;
-      color: #aaa;
-      text-align: center;
+    .brake {
+      background: linear-gradient(145deg, #703131, #2b0505);
+      border-color: #f88;
     }
   </style>
 </head>
@@ -268,7 +312,6 @@ const char MAIN_PAGE[] = R"EOF(
         <div id="statusLine" class="status-line">Idle</div>
         <div id="lastCmdLine" class="status-line">Last cmd: None</div>
         <div class="status-line">IP: 192.168.4.1</div>
-        <div class="status-line">Control: WASD or on-screen controls</div>
       </div>
     </div>
 
@@ -300,13 +343,11 @@ const char MAIN_PAGE[] = R"EOF(
   </div>
 
   <script>
-    // Base magnitudes
     let currentSpeed = 2600;
-    const STEER = 2000;        // normal steering
-    const DRIFT_STEER = 3800;  // stronger steering in drift mode
+    const STEER = 2000;
+    const DRIFT_STEER = 3800;
     const MAX = 4095;
 
-    // State flags
     let driftEnabled = false;
 
     let keyW=false,keyA=false,keyS=false,keyD=false;
@@ -324,21 +365,19 @@ const char MAIN_PAGE[] = R"EOF(
     function setStatus(s){statusLine.textContent=s;}
     function setLast(s){lastCmdLine.textContent="Last cmd: "+s;}
 
-    // Speed slider changes throttle magnitude
     speedSlider.oninput=e=>{
       currentSpeed=parseInt(e.target.value);
       speedDisplay.textContent="SPEED: "+currentSpeed;
       updateMotion();
     };
 
-    // Toggle drift ON/OFF
     driftToggle.onclick = ()=>{
       driftEnabled = !driftEnabled;
       driftToggle.classList.toggle("active", driftEnabled);
+      document.body.classList.toggle("drift-on", driftEnabled);
       driftStateSpan.textContent = driftEnabled ? "ON" : "OFF";
       setStatus(driftEnabled ? "Drift mode enabled" : "Drift mode disabled");
       setLast("Drift "+(driftEnabled?"ON":"OFF"));
-      // Recompute motion with new steering strength
       updateMotion();
     };
 
@@ -355,7 +394,6 @@ const char MAIN_PAGE[] = R"EOF(
 
       updateGear(throttle);
       updateRpm(throttle);
-
       highlight();
 
       if(throttle===0 && steering===0){
