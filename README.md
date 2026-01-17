@@ -29,7 +29,7 @@ An ESP32 based RC vehicle inspired by the BMW M2 Competition, combining mechanic
 
 <p align="center">
   <img src="media/M2_Competition.jpg" width="32%" />
-  <img src="media/web_dashboard.jpg" width="32%" />
+  <img src="media/web_dashboard.png" width="32%" />
   <img src="media/chassis.jpg" width="32%" />
 </p>
 
@@ -70,8 +70,3 @@ https://drive.google.com/file/d/1aE3MejNEvwfQ_U80hKvikGiKrMmLiO1q/view?usp=shari
 - Vision based obstacle detection using the onboard camera  
 - Autonomous navigation behaviors built on existing safety logic  
 - Mobile optimized dashboard layout  
-
----
-
-## 📁 Repository Structure
-
