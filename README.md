@@ -28,13 +28,16 @@ An ESP32 based RC vehicle inspired by the BMW M2 Competition, combining mechanic
 ## 📸 Project Media
 
 <p align="center">
-  <img src="media/M2_Competition.jpg" width="32%" />
-  <img src="media/web_dashboard.png" width="32%" />
-  <img src="media/chassis.jpg" width="32%" />
+  <img src="media/M2_Competition.jpg" width="40%" />
+  <img src="media/chassis.jpg" width="40%" />
 </p>
 
 <p align="center">
-  <i>BMW M2 inspired exterior, real time web dashboard, and SolidWorks chassis design</i>
+  <img src="media/web_dashboard.png" width="70%" />
+</p>
+
+<p align="center">
+  <i>BMW M2 inspired exterior, SolidWorks chassis design, and full screen web based control dashboard</i>
 </p>
 
 ---
